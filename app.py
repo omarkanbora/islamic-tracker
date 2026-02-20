@@ -16,6 +16,20 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+    # إنشاء أدمن مرة واحدة
+    if not User.query.filter_by(username="admin").first():
+        admin = User(
+            username="admin",
+            password_hash=generate_password_hash("admin123"),
+            is_admin=True
+        )
+        db.session.add(admin)
+        db.session.commit()
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -113,32 +127,34 @@ def login():
 
     return render_template("login.html")
 
-@app.route("/dashboard", methods=["GET", "POST"])
+@app.route("/dashboard")
 @login_required
 def dashboard():
     today = date.today()
-    record = DailyRecord.query.filter_by(user_id=current_user.id, date=today).first()
 
-    if request.method == "POST" and not record:
-        points = 0
-        answers = {}
+    # كل الأسئلة اللي جاوبها المستخدم النهارده
+    answered_questions = DailyRecord.query.filter_by(
+        user_id=current_user.id,
+        date=today
+    ).all()
 
-        questions = ["zuhr", "asr", "maghrib", "tasbeeh", "quran"]
+    # نحولهم لقائمة أسماء
+    answered = [record.question for record in answered_questions]
 
-        for q in questions:
-            answers[q] = q in request.form
-            if answers[q]:
-                points += 5
+    # قائمة الأسئلة المتاحة
+    questions = {
+        "zuhr": "صليت الظهر",
+        "asr": "صليت العصر",
+        "maghrib": "صليت المغرب",
+        "tasbeeh": "سبحت 100 مرة",
+        "quran": "قرأت قرآن"
+    }
 
-        record = DailyRecord(user_id=current_user.id, daily_points=points, **answers)
-        current_user.total_points += points
-
-        db.session.add(record)
-        db.session.commit()
-
-        return redirect(url_for("dashboard"))
-
-    return render_template("dashboard.html", record=record)
+    return render_template(
+        "dashboard.html",
+        questions=questions,
+        answered=answered
+    )
 
 @app.route("/admin/leaderboard")
 @login_required
@@ -148,18 +164,4 @@ def admin_leaderboard():
 
     users = User.query.order_by(User.total_points.desc()).all()
     return render_template("leaderboard.html", users=users)
-
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
-        # إنشاء أدمن مرة واحدة
-        if not User.query.filter_by(username="admin").first():
-            admin = User(
-                username="admin",
-                password_hash=generate_password_hash("admin123"),
-                is_admin=True
-            )
-            db.session.add(admin)
-            db.session.commit()
     
