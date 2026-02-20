@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin</title>
+</head>
+<body>
+
+<h2>👑 لوحة التحكم</h2>
+
+<table border="1">
+<tr>
+    <th>الاسم</th>
+    <th>النقاط</th>
+    <th>أدمن؟</th>
+</tr>
+
+{% for user in users %}
+<tr>
+    <td>{{ user.username }}</td>
+    <td>{{ user.total_points }}</td>
+    <td>{{ user.is_admin }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+<a href="/admin/reset">🔄 تصفير الشهر</a><br>
+<a href="/dashboard">رجوع</a>
+
+</body>
+</html>

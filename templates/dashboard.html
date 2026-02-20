@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="card p-4 shadow">
+
+<h4 class="mb-3">أسئلة اليوم</h4>
+
+<form method="POST" action="/answer/fagr">
+    <button class="btn btn-success w-100 mb-2">صليت الفجر فى المسجد</button>
+</form>
+
+<form method="POST" action="/answer/zuhr">
+    <button class="btn btn-success w-100 mb-2">صليت الظهر فى المسجد</button>
+</form>
+
+<form method="POST" action="/answer/asr">
+    <button class="btn btn-success w-100 mb-2">صليت العصر فى المسجد</button>
+</form>
+
+<form method="POST" action="/answer/maghrib">
+    <button class="btn btn-success w-100 mb-2">صليت المغرب فى المسجد</button>
+</form>
+
+<form method="POST" action="/answer/isha">
+    <button class="btn btn-success w-100 mb-2">صليت العشاء فى المسجد</button>
+</form>
+
+<form method="POST" action="/answer/traweeh">
+    <button class="btn btn-success w-100 mb-2">صليت قيام الليل فى المسجد</button>
+</form>
+
+<form method="POST" action="/answer/tsbeeh">
+    <button class="btn btn-success w-100 mb-2">استغفرت اكثر من 100 مره</button>
+</form>
+
+<form method="POST" action="/answer/slah">
+    <button class="btn btn-success w-100 mb-2">صليت على النبى اكثر من1000 مره</button>
+</form>
+
+<form method="POST" action="/answer/sdka">
+    <button class="btn btn-success w-100 mb-2">تصدقت</button>
+</form>
+
+<form method="POST" action="/answer/quran">
+    <button class="btn btn-success w-100 mb-2">قرات جزء من القران او اكثر</button>
+</form>
+
+<form method="POST" action="/answer/som">
+    <button class="btn btn-success w-100 mb-2">صومت</button>
+</form>
+
+<form method="POST" action="/answer/azkar">
+    <button class="btn btn-success w-100 mb-2">قولت اذكار الصباح</button>
+</form>
+
+<form method="POST" action="/answer/azkar_msa2">
+    <button class="btn btn-success w-100 mb-2">قولت اذكار المساء</button>
+</form>
+
+<form method="POST" action="/answer/azkar_tsbeeh">
+    <button class="btn btn-success w-100 mb-2">سبحت اكثر من 100 مره</button>
+</form>
+
+<form method="POST" action="/answer/tfseer">
+    <button class="btn btn-success w-100 mb-2">قرات على الاقل تفسير آية</button>
+</form>
+
+<hr>
+
+
+{% if current_user.is_admin %}
+<a href="/admin/leaderboard" class="btn btn-warning">👑 الترتيب</a>
+{% endif %}
+
+<a href="/logout" class="btn btn-danger">Logout</a>
+
+</div>
+
+{% endblock %}

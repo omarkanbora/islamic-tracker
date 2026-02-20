@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">🏆 الترتيب الشهري</h3>
+
+<table class="table table-striped">
+<tr>
+    <th>#</th>
+    <th>الاسم</th>
+    <th>النقاط</th>
+</tr>
+
+{% for user in users %}
+<tr {% if user == top_user %}class="table-warning"{% endif %}>
+    <td>{{ loop.index }}</td>
+    <td>
+        {{ user.username }}
+        {% if user == top_user %}
+            🥇
+        {% endif %}
+    </td>
+    <td>{{ user.total_points }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<a href="/dashboard" class="btn btn-secondary">رجوع</a>
+
+{% endblock %}
