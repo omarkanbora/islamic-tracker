@@ -1,32 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-<h2>👑 لوحة التحكم</h2>
+<div class="container mt-4" style="max-width: 600px;">
 
-<table border="1">
-<tr>
-    <th>الاسم</th>
-    <th>النقاط</th>
-    <th>أدمن؟</th>
-</tr>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold">👑 لوحة التحكم</h4>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-secondary">
+            رجوع
+        </a>
+    </div>
 
-{% for user in users %}
-<tr>
-    <td>{{ user.username }}</td>
-    <td>{{ user.total_points }}</td>
-    <td>{{ user.is_admin }}</td>
-</tr>
-{% endfor %}
+    <!-- Users Table -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover text-center mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>الاسم</th>
+                        <th>النقاط</th>
+                        <th>أدمن</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="fw-semibold">{{ user.username }}</td>
+                        <td>{{ user.total_points }}</td>
+                        <td>
+                            {% if user.is_admin %}
+                                <span class="badge bg-success">نعم</span>
+                            {% else %}
+                                <span class="badge bg-secondary">لا</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-</table>
+    <!-- Actions -->
+    <div class="mt-4 d-grid gap-2">
+        <a href="{{ url_for('admin_leaderboard') }}" class="btn btn-warning">
+            🏆 Leaderboard
+        </a>
 
-<br>
-<a href="/admin/reset">🔄 تصفير الشهر</a><br>
-<a href="/dashboard">رجوع</a>
+        <a href="{{ url_for('reset') }}" class="btn btn-danger">
+            🔄 تصفير الشهر
+        </a>
+    </div>
 
-</body>
-</html>
+</div>
+
+{% endblock %}
