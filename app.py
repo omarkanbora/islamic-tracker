@@ -23,7 +23,6 @@ def create_tables_once():
     if not hasattr(g, "db_initialized"):
         db.create_all()
 
-        # إنشاء أدمن مرة واحدة
         if not User.query.filter_by(username="admin").first():
             admin = User(
                 username="admin",
@@ -137,22 +136,30 @@ def login():
 def dashboard():
     today = date.today()
 
-    # كل الأسئلة اللي جاوبها المستخدم النهارده
     answered_questions = DailyRecord.query.filter_by(
         user_id=current_user.id,
         date=today
     ).all()
 
-    # نحولهم لقائمة أسماء
     answered = [record.question for record in answered_questions]
 
-    # قائمة الأسئلة المتاحة
     questions = {
-        "zuhr": "صليت الظهر",
-        "asr": "صليت العصر",
-        "maghrib": "صليت المغرب",
-        "tasbeeh": "سبحت 100 مرة",
-        "quran": "قرأت قرآن"
+        "fagr": "صليت الفجر فى المسجد",
+        "zuhr": "صليت الظهر فى المسجد",
+        "asr": "صليت العصر فى المسجد",
+        "maghrib": "صليت المغرب فى المسجد",
+        "isha": "صليت العشاء فى المسجد",
+        "Traweeh":"صليت التراويح ف المسجد كاملة",
+        "tasbeeh": "سبحت على الاقل 100 مرة",
+        "slah": "صليت على النبى على الاقل 1000 مره",
+        "quran": "قرأت على الاقل جزء من  القرآن",
+        "sdqa":"تصدقت",
+        "som":"صومت",
+        "istghfar":"استغفرت على الاقل 100 مره",
+        "azkar":"قولت اذكار الصباح",
+        "azkar_msa2":"قولت اذكار المساء",
+        "tfseer":"قرأت تفسير آية",
+        
     }
 
     return render_template(
