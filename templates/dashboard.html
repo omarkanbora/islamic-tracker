@@ -1,15 +1,31 @@
-<h3>أسئلة اليوم</h3>
+{% extends "base.html" %}
+{% block content %}
 
-{% for key, text in questions.items() %}
-    {% if key in answered %}
-        <button class="btn btn-success w-100 mb-2" disabled>
-            {{ text }} ✔
-        </button>
-    {% else %}
-        <form method="POST" action="{{ url_for('answer', question=key) }}">
-            <button class="btn btn-outline-primary w-100 mb-2">
-                {{ text }}
+<div class="container mt-4" style="max-width: 400px;">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold">أسئلة اليوم 🕌</h4>
+        <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-danger">
+            Log out
+        </a>
+    </div>
+
+    <!-- Questions -->
+    {% for key, text in questions.items() %}
+        {% if key in answered %}
+            <button class="btn btn-success w-100 mb-2" disabled>
+                {{ text }} ✔
             </button>
-        </form>
-    {% endif %}
-{% endfor %}
+        {% else %}
+            <form method="POST" action="{{ url_for('answer', question=key) }}">
+                <button class="btn btn-outline-primary w-100 mb-2">
+                    {{ text }}
+                </button>
+            </form>
+        {% endif %}
+    {% endfor %}
+
+</div>
+
+{% endblock %}
