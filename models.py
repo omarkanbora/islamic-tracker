@@ -13,8 +13,8 @@ class User(UserMixin, db.Model):
 
 class DailyRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.Date)
-    question = db.Column(db.String(20))  # zuhr, asr, maghrib...
+    question = db.Column(db.String(50))
 
 daily_points = db.Column(db.Integer)
