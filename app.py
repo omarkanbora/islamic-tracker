@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 from models import db, User
 from flask import abort
+from flask import g
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -16,19 +17,23 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
-    # إنشاء أدمن مرة واحدة
-    if not User.query.filter_by(username="admin").first():
-        admin = User(
-            username="admin",
-            password_hash=generate_password_hash("admin123"),
-            is_admin=True
-        )
-        db.session.add(admin)
-        db.session.commit()
+@app.before_request
+def create_tables_once():
+    if not hasattr(g, "db_initialized"):
+        db.create_all()
+
+        # إنشاء أدمن مرة واحدة
+        if not User.query.filter_by(username="admin").first():
+            admin = User(
+                username="admin",
+                password_hash=generate_password_hash("admin123"),
+                is_admin=True
+            )
+            db.session.add(admin)
+            db.session.commit()
+
+        g.db_initialized = True
 
 @login_manager.user_loader
 def load_user(user_id):
